@@ -125,7 +125,10 @@ const CustomerCheckout = () => {
             (item.base === undefined) ? 
                 orderItems.push({ //push an object to orderItems
                     "isCombo"   : (from.combo && !wasComboSet) ? true : false,
-                    "starterId" : String(starterIds.indexOf(item) + 1),
+                    "starterId" : String(starterIds.indexOf(
+                        (item === 'Falafels') ?
+                            '2 Falafels' : item
+                    ) + 1),
                     "baseId"    : "",
                     "proteinId" : ""
                 }) : 

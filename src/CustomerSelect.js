@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import Pagination from '@mui/material/Pagination';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { Box } from '@mui/material';
 import apiClient from './services/apiClient';
 import './css/CustomerSelect.css';
 
@@ -128,6 +129,16 @@ const CustomerSelect = () => {
                 <div className='items-page' >
                     <div className='items' >
                         {(starterPages.length === 0) ? null : starterPages[starterPage - 1].map(starter => {
+                            const downAmount = (starter.name === 'Falafels') ?
+                                                    40 :
+                                                (starter.name === 'Vegan Box') ?
+                                                    45.5 :
+                                                (starter.name === 'Hummus and Pita') ?
+                                                    47 :
+                                                ( starter.name === 'Garlic Fries') ?
+                                                    31.5 :
+                                                    75;
+
                             return (
                                 <Card
                                     key={starter.id}
@@ -140,9 +151,30 @@ const CustomerSelect = () => {
                                         backgroundColor: '#FFFAF0'
                                     }}
                                 >
-                                    <div className='item-info' >
-                                        <label>{starter.name}</label>
-                                        <Button value={starter.name} onClick={addStarter} >Order</Button>
+                                    <div className='item-elements' >
+                                        <div className='item-pic-container' >
+                                            <img 
+                                                className='item-pic' 
+                                                src={
+                                                    (starter.name === 'Falafels') ? 
+                                                        'https://data.thefeedfeed.com/static/2020/08/14/15974236195f36c003242c4.jpg' :
+                                                    (starter.name === 'Vegan Box') ? 
+                                                        'https://i.pinimg.com/736x/6e/68/b9/6e68b9ac8e0f1256e00cb405d21c9a9c.jpg' :
+                                                    (starter.name === 'Hummus and Pita') ?
+                                                        'https://static.onecms.io/wp-content/uploads/sites/19/2014/08/22/white-bean-pumpkin-hummus-pita-chips-ck-x.jpg' :
+                                                    (starter.name === 'Garlic Fries') ?
+                                                        'https://www.foodiecrush.com/wp-content/uploads/2018/04/Killer-Rosemary-Garlic-Fries-foodiecrush.com-010.jpg' :
+                                                        'https://images.squarespace-cdn.com/content/v1/53b839afe4b07ea978436183/1608506169128-S6KYNEV61LEP5MS1UIH4/traditional-food-around-the-world-Travlinmad.jpg'
+                                                 }
+                                                 alt="starter picture" />
+                                        </div>
+                                        <div 
+                                            className='item-info'
+                                            style={{ top: `${downAmount}%` }}
+                                        >
+                                            <label>{starter.name}</label>
+                                            <Button value={starter.name} onClick={addStarter} >Order</Button>
+                                        </div>
                                     </div>
                                 </Card>
                             )
@@ -159,6 +191,26 @@ const CustomerSelect = () => {
                 <div className='items-page' >
                     <div className='items' >
                         {(basePages.length === 0) ? null : basePages[basePage - 1].map(base => {
+                            const picUrl = (base.name === 'Pita') ? 
+                                                'https://www.worldofvegan.com/wp-content/uploads/2021/06/Easy-Vegan-Stovetop-Pita-Bread-.jpg' :
+                                            (base.name === 'Grain Bowl') ? 
+                                                'https://cdn.theliveinkitchen.com/wp-content/uploads/2021/11/22135152/Autumn-Grain-Bowl-The-Live-In-Kitchen-Featured.jpg' :
+                                            (base.name === 'Salad') ?
+                                                'https://cdn.loveandlemons.com/wp-content/uploads/2021/04/green-salad-500x375.jpg' :
+                                            (base.name === 'Greens and Grains') ?
+                                                'https://dishingouthealth.com/wp-content/uploads/2021/12/GreenGrainSalad_Square.jpg' :
+                                                'https://img.apmcdn.org/3ed4888cab8f559f76a85c295208583a4d2564f6/uncropped/7ee709-splendid-table-food-waste-gettyimages-172481514-lede.jpg'
+
+                            const downAmount = (base.name === 'Pita') ?
+                                                    76 :
+                                                (base.name === 'Grain Bowl') ?
+                                                    46 :
+                                                (base.name === 'Salad') ?
+                                                    61.5 :
+                                                (base.name === 'Greens and Grains') ?
+                                                    46.5 :
+                                                    80;
+
                             return (
                                 <Card
                                     key={base.id}
@@ -171,26 +223,38 @@ const CustomerSelect = () => {
                                         backgroundColor: '#FFFAF0'
                                     }}
                                 >
-                                    <div className='item-info' >
-                                        <label>{base.name}</label>
-                                        <Link
-                                            to={{
-                                                pathname: '/selection/entree',
-                                            }}
-                                            state={{
-                                                base: base.name,
-                                                bases: bases,
-                                                cartItemsArr: [...starters, ...bases],
-                                                starters: starters,
-                                                combo: combo,
-                                                comboSet: comboSet,
-                                                cost: cost
-                                            }}
+                                    <div className='item-elements' >
+                                        <div className='item-pic-container' >
+                                            <img 
+                                                className='item-pic' 
+                                                src={picUrl}
+                                                alt="base picture" />
+                                        </div>
+                                        <div 
+                                            className='item-info'
+                                            style={{ top: `${downAmount}%` }}
                                         >
-                                            <Button value={base.name} onClick={changeBase} >
-                                                Order
-                                            </Button>
-                                        </Link>
+                                            <label>{base.name}</label>
+                                            <Link
+                                                to={{
+                                                    pathname: '/selection/entree',
+                                                }}
+                                                state={{
+                                                    base: base.name,
+                                                    bases: bases,
+                                                    cartItemsArr: [...starters, ...bases],
+                                                    starters: starters,
+                                                    combo: combo,
+                                                    comboSet: comboSet,
+                                                    cost: cost,
+                                                    picUrl: picUrl
+                                                }}
+                                            >
+                                                <Button value={base.name} onClick={changeBase} >
+                                                    Order
+                                                </Button>
+                                            </Link>
+                                        </div>
                                     </div>
                                 </Card>
                             )

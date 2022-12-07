@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Login from './Login.js';
-import Register from './Register.js';
 import Home from './Home.js';
 import Server from './Server.js';
 import Sales from './Sales.js';
@@ -194,8 +192,6 @@ function App() {
             <div>
                 <Routes>
                     <Route path='/' element={<Home />} /> 
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/register' element={<Register />} />
                     <Route path="/selection/entree" element={<EntreeMods />} />
                     <Route path="/selection" element={<CustomerSelect />} />
                     <Route path="/checkout" element={<CustomerCheckout />} />

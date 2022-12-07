@@ -19,6 +19,7 @@ const EntreeMods = ({ base }) => {
     const location = useLocation();
     const from = location.state;
 
+    const [ downAmount, setDownAmount ] = useState(0);
     const [ proteinList, setProteinList ] = useState([]);
     const [ protein, setProtein ] = useState("");
     const [ proteinItems, setProteinItems ] = useState(null);
@@ -60,6 +61,20 @@ const EntreeMods = ({ base }) => {
         showProteinList();
     }, [proteinList]);
 
+    useEffect(() => {
+        setDownAmount(
+            (from.base === 'Pita') ?
+                90 :
+            (from.base === 'Grain Bowl') ?
+                56 :
+            (from.base === 'Salad') ?
+                74 :
+            (from.base === 'Greens and Grains') ?
+                56 :
+                93
+        );
+    }, [from]);
+
     const showProteinList = () => {
         let items = null;
 
@@ -84,7 +99,6 @@ const EntreeMods = ({ base }) => {
         console.log(items);
     };
 
-
     return (
         <div className='entree-mods' >
             <div className='selected-entree' >
@@ -99,8 +113,20 @@ const EntreeMods = ({ base }) => {
                         flexDirection: 'column'
                     }}
                 >
-                    <div className='item-info' >
-                        <label>{from.base}</label>
+
+                    <div className='item-elements' >
+                        <div className='item-pic-container' >
+                            <img 
+                                className='item-pic' 
+                                src={from.picUrl}
+                                alt="base picture" />
+                        </div>
+                        <div 
+                            className='item-info-entree'
+                            style={{ top: `${downAmount}%` }}
+                        >
+                            <label>{from.base}</label>
+                        </div>
                     </div>
                 </Card>
             </div>

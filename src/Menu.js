@@ -44,19 +44,22 @@ const Menu = () => { // this does the same thing as the class Menu extends React
     const getStarters = async () => { // this is a function that gets the starters from the database
         const starterItems = await api.getMenuItemByID('starter'); // this gets the starter items from the database
         setStarters(starterItems.data); // this sets the state variable starters to the starter items from the database
+        console.log(starters);
     };
 
     const getBases = async () => { // this is a function that gets the bases from the database
         const baseItems = await api.getMenuItemByID('base'); // this gets the base items from the database
         setBases(baseItems.data); 
+        console.log(bases);
     };
 
     const getProteins = async () => { // this is a function that gets the proteins from the database
         const proteinItems = await api.getMenuItemByID('protein'); // this gets the protein items from the database
         setProteins(proteinItems.data); 
+        console.log(proteins);
     };
 
-    const fetchMenuItems = async () => { // this is a function that gets the menu items from the database
+    const fetchMenuItems = () => { // this is a function that gets the menu items from the database
         const newStarters = [];
         for (let i = 0; i < starters.length; i += 1) { // this is a for loop that goes through the starters
             newStarters.push( // this pushes the starter items into the newStarters array
@@ -94,19 +97,18 @@ const Menu = () => { // this does the same thing as the class Menu extends React
             );
         }
 
-        if (starters.length > 0 && bases.length > 0 && proteins.length > 0) { // this checks if the starters, bases, and proteins have been fetched
-            setMenuItems([...newStarters, ...newBases, ...newProteins]);    // this sets the state variable menuItems to the newStarters, newBases, and newProteins
-        }    
+        setMenuItems([...newStarters, ...newBases, ...newProteins]);   
+        const menuItemsTest = [...newStarters, ...newBases, ...newProteins];
 
-        if (menuItems !== null) { // this checks if the menu items have been fetched
+        if (menuItemsTest !== null && starters.length > 0 && bases.length > 0 && proteins.length > 0) { // this checks if the menu items have been fetched
             setTable(  // this sets the state variable table to the table
                 <DataGrid       
-                    rows={menuItems.sort(function(a, b){return a.name.localeCompare(b.name)})}
+                    rows={menuItemsTest.sort(function(a, b){return a.name.localeCompare(b.name)})}
                     columns={columns}
-                    getRowId={(row) => menuItems.indexOf(row)}
+                    getRowId={(row) => menuItemsTest.indexOf(row)}
                     checkboxSelection
                     onSelectionModelChange={(ids) => {
-                        const selectedRowsData = ids.map((id) => menuItems.find((row) => menuItems.indexOf(row) === id));
+                        const selectedRowsData = ids.map((id) => menuItemsTest.find((row) => menuItemsTest.indexOf(row) === id));
                         setSelectedItems(selectedRowsData);   
                     }}
                 />
@@ -119,6 +121,9 @@ const Menu = () => { // this does the same thing as the class Menu extends React
             const { data, error } = await api.deleteMenuItem(`${row.type}-${row.id}`);
             console.log(data);
         });
+        getStarters();
+        getBases();
+        getProteins();
         fetchMenuItems();
     };
 
@@ -171,7 +176,9 @@ const Menu = () => { // this does the same thing as the class Menu extends React
     };
 
     useEffect(() => {
-        fetchMenuItems();
+        if (starters.length > 0 && bases.length > 0 && proteins.length > 0) {
+            fetchMenuItems();
+        }
     }, [starters, bases, proteins]);
 
     useEffect(() => {

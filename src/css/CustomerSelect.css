@@ -63,10 +63,13 @@
 }
 
 .item-info {
+    position: absolute;
     display: flex;
     flex-direction: column;
-    position: relative;
-    top: 70%;
+    z-index: 100;
+    background-color: white;
+    padding-top: 2%;
+    width: 200%;
 }
 
 .items-in-cart {
@@ -121,4 +124,16 @@
 
 .cart-item-with-delete > * {
     margin-right: 4%;
+}
+
+.item-elements {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.item-pic {
+    width: 100%;
+    width: 100%;
 }

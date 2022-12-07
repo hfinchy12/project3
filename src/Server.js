@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Checkbox from '@mui/material/Checkbox';
@@ -9,7 +9,6 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import './css/Server.css';
 import apiClient from './services/apiClient';
-import { Typography } from '@mui/material';
 
 const Server = () => {
 
@@ -19,12 +18,12 @@ const Server = () => {
     const [ protein, setProtein ] = useState(""); // creates a state variable called protein and a function called setProtein
     const [ starter, setStarter ] = useState(""); // creates a state variable called starter and a function called setStarter
     const [ combo, setCombo ] = useState(false); // creates a state variable called combo and a function called setCombo
+    const [ cost, setCost ] = useState(0.00); // creates a state variable called cost and a function called setCost
+    const [ wasComboSet, setWasComboSet ] = useState(false);
 
     const baseIds = ["Grain Bowl", "Salad", "Pita", "Greens and Grains"]; // creates an array of baseIds
-    const proteinIds = ["Gyro", "Falafel", "Vegetable Medley", "Meatballs", "Chicken"]; // creates an array of proteinIds
+    const proteinIds = ["Gyro", "Falafal", "Vegetable Medley", "Meatballs", "Chicken"]; // creates an array of proteinIds
     const starterIds = ["2 Falafels", "Hummus and Pita", "Vegan Box", "Garlic Fries"]; // creates an array of starterIds
-
-    const cost = null; // creates a variable called cost
 
     const addOrder = async orders => { // creates a function called addOrder that takes in an array of orders
         const { data, error } = await api.addOrder(orders); // creates a variable called data and a variable called error that are the result of calling the addOrder function in apiClient
@@ -33,6 +32,7 @@ const Server = () => {
 
     const changeBase = (e) => { // creates a function called changeBase that takes in an event
         setBase(e.target.value); // sets the base state variable to the value of the event
+        setCost(cost + 7.49);
     };
 
     const changeProtein = (e) => { // creates a function called changeProtein that takes in an event
@@ -41,13 +41,43 @@ const Server = () => {
 
     const changeStarter = (e) => { // creates a function called changeStarter that takes in an event
         setStarter(e.target.value); // sets the starter state variable to the value of the event
+
+        if (e.target.value === "2 Falafels") {
+            setCost(2.85);
+            if (base !== '') {
+                setCost(2.85 + 7.49);
+            }
+        } else if (e.target.value === "Hummus & Pita") {
+            setCost(3.50);
+            if (base !== '') {
+                setCost(3.50 + 7.49);
+            }
+        } else if (e.target.value === "Vegan Box") {
+            setCost(6.49);
+            if (base !== '') {
+                setCost(6.49 + 7.49);
+            }
+        } else if (e.target.value === "Garlic Fries") {
+            setCost(1.99);
+            if (base !== '') {
+                setCost(1.99 + 7.49);
+            }
+        }
     };
     
     const changeCombo = (e) => { // creates a function called changeCombo that takes in an event
         if (e.target.checked === true) { // if the event target is checked
             setCombo(true); // set the combo state variable to true
+            if (!wasComboSet) {
+                setWasComboSet(true);
+                setCost(cost + 2.00);
+            }
         } else {    // otherwise
             setCombo(false); // set the combo state variable to false
+            if (wasComboSet) {
+                setWasComboSet(false);
+                setCost(cost - 2.00);
+            }
         }
     };
 
@@ -102,6 +132,7 @@ const Server = () => {
         setProtein(null);
         setStarter(null);
         setCombo(false);
+        setCost(0.00);
     };
 
     const createCartItems = () => {     // creates a function called createCartItems
@@ -192,7 +223,7 @@ const Server = () => {
                 <div className='meal-options' >
                     <div className='bases-meal-option' >
                         <FormControl >
-                            <FormLabel id="bases-controlled-radio-buttons-group"><h2><b>Bases</b></h2></FormLabel>
+                            <FormLabel id="bases-controlled-radio-buttons-group"><h2>Bases</h2></FormLabel>
                             <RadioGroup 
                                 aria-labelledby="bases-controlled-radio-buttons-group"
                                 name="bases-controlled-radio-buttons-group"
@@ -208,7 +239,7 @@ const Server = () => {
                     </div>
                     <div className='proteins-meal-option' >
                         <FormControl>
-                            <FormLabel id="proteins-controlled-radio-buttons-group"><h2><b>Protien</b></h2></FormLabel>
+                            <FormLabel id="proteins-controlled-radio-buttons-group"><h2>Proteins</h2></FormLabel>
                             <RadioGroup
                                 aria-labelledby="proteins-controlled-radio-buttons-group"
                                 name="proteins-controlled-radio-buttons-group"
@@ -216,7 +247,7 @@ const Server = () => {
                                 onChange={changeProtein}
                             >
                                 <FormControlLabel value="Gyro" control={<Radio size="large"/>} label="Gyro" />
-                                <FormControlLabel value="Falafel" control={<Radio size="large" />} label="Falafel" />
+                                <FormControlLabel value="Falafal" control={<Radio size="large" />} label="Falafel" />
                                 <FormControlLabel value="Vegetable Medley" control={<Radio size="large"  />} label="Vegetable Medley" />
                                 <FormControlLabel value="Meatballs" control={<Radio size="large"  />} label="Meatballs" />
                             </RadioGroup>
@@ -224,7 +255,7 @@ const Server = () => {
                     </div>
                     <div className='starters-meal-option' >
                         <FormControl>
-                            <FormLabel id="starters-controlled-radio-buttons-group"> <h2><b>Starters</b></h2></FormLabel>
+                            <FormLabel id="starters-controlled-radio-buttons-group"> <h2>Starters</h2></FormLabel>
                             <RadioGroup
                                 aria-labelledby="starters-controlled-radio-buttons-group"
                                 name="starters-controlled-radio-buttons-group"
@@ -232,8 +263,8 @@ const Server = () => {
                                 onChange={changeStarter}
                             > 
                             {/* label={<Typography variant="body2" color="textSecondary">2 Falafels</Typography>} */}
-                                <FormControlLabel value="2 Falafels" control={<Radio size="large"  />}  label = "2 Falafals" />
-                                <FormControlLabel value="Hummus & Pita" control={<Radio size="large"  />} label="Hummus & Pita" />
+                                <FormControlLabel value="2 Falafels" control={<Radio size="large"  />}  label = "2 Falafels" />
+                                <FormControlLabel value="Hummus and Pita" control={<Radio size="large"  />} label="Hummus & Pita" />
                                 <FormControlLabel value="Vegan Box" control={<Radio size="large"  />} label="Vegan Box" />
                                 <FormControlLabel value="Garlic Fries" control={<Radio size="large"  />} label="Garlic Fries" />
                             </RadioGroup>
